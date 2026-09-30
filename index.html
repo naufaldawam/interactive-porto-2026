@@ -1,36 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Naufal — 3D Portfolio</title>
+  <meta name="theme-color" content="#0a0714">
+  <title>Naufal — 3D Portfolio V21</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
   <div id="loading">
-    <div class="loader"></div><span>LOADING WORLD...</span>
+    <div class="loading-logo">Naufal Dawam Dz<span></span></div>
+    <div class="loading-text">Portofolio Theme World<span></span></div>
+    <div class="loading-bar"><i></i></div>
+    <div class="loading-text">BUILDING WORLD</div>
   </div>
 
-  <div id="hud">
-    <div class="brand">NAUFAL<span>.</span></div>
-    <div class="hint">WASD / ARROW KEYS TO DRIVE · SPACE TO BRAKE</div>
+  <div id="topbar">
+    <div class="brand">Naufal Dawam Dz</div>
+    <div class="top-actions">
+      <div class="world-status"><span class="dot"></span> Interactive Portofolio World</div>
+      <button id="modeToggle" type="button" aria-label="Switch to night">☀ DAY</button>
+    </div>
   </div>
 
-  <div id="crosshair">+</div>
-
-  <div id="info" class="hidden">
-    <button id="closeInfo">×</button>
-    <div id="infoContent"></div>
+  <div id="controls">
+    <div class="control-row"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>DRIVE</span></div>
+    <div class="control-row"><kbd>SPACE</kbd><span>BRAKE</span></div>
+    <div class="control-row"><kbd>E</kbd><span>INTERACT</span></div>
+    <div class="control-row"><kbd>N</kbd><span>DAY / NIGHT</span></div>
   </div>
 
-  <div id="mobileHint">Desktop recommended for the full experience.</div>
+  <div id="zone-card">
+    <div class="zone-kicker">NEARBY</div>
+    <div id="zone-title">PROJECTS</div>
+    <div id="zone-action">Press E to explore</div>
+  </div>
+
+  <div id="info" aria-hidden="true">
+    <button id="closeInfo" aria-label="Close">×</button>
+    <div class="info-kicker" id="infoKicker">AREA</div>
+    <h2 id="infoTitle"></h2>
+    <p id="infoText"></p>
+    <div class="chips" id="infoChips"></div>
+  </div>
+
+  <div id="mobileControls" aria-hidden="true">
+    <div id="mobileJoystick" aria-label="Steer">
+      <div id="mobileJoystickRing"></div>
+      <div id="mobileJoystickKnob">●</div>
+    </div>
+
+    <div id="mobilePedals">
+      <button id="mobileGas" type="button" aria-label="Accelerate">GAS</button>
+      <button id="mobileBrake" type="button" aria-label="Brake">BRAKE</button>
+    </div>
+
+    <button id="mobileInteract" type="button" aria-label="Interact">E</button>
+  </div>
+
+  <div id="mobileHint" aria-hidden="true">LANDSCAPE MODE • TOUCH TO DRIVE</div>
 
   <script type="module" src="./main.js"></script>
 </body>
-
 </html>

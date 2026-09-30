@@ -1,27 +1,27 @@
-# Naufal 3D Portfolio — MVP
+# Naufal — 3D Portfolio V22
 
-A small Three.js driving portfolio prototype.
+Three.js interactive portfolio world. Drive around the boulevard to discover ABOUT, PROJECTS, SKILLS and CONTACT.
+
+## V22 visual pass
+- Denser boulevard scene with closer storefronts and neighborhood blocks
+- Larger, more readable parked vehicles with consistent scale
+- Larger parking lots and additional foreground parking pockets
+- More trees, shrubs, hedge strips and planters
+- More detailed storefront facades and road-facing building signs
+- Stronger city skyline, mountains and procedural cloud depth
+- Camera brought closer to make the car and roadside world read larger
+- Day/night fireflies are now night-only so the daytime scene stays clean
+- Main road geometry and gameplay remain intact
 
 ## Run
-Because this uses ES modules, serve the folder through a local HTTP server.
+```bash
+npx serve .
+```
 
-### Python
-python -m http.server 5173
+Open the local URL shown by `serve` in a desktop browser.
 
-Then open:
-http://localhost:5173
+Controls: `WASD` drive, `SPACE` brake, `E` interact, `N` day/night.
 
-## Controls
-WASD / Arrow keys = drive
-Space = brake
-Click an interactable building = portfolio information
 
-## Next upgrades
-- GLB car and environment
-- Better vehicle physics
-- Third-person camera
-- Project detail pages
-- Sound
-- Particles and post-processing
-- Mobile touch controls
-- Real portfolio content
+## Mobile driving
+The portfolio now supports touch driving on mobile. Use the left virtual joystick to steer, the GAS button to accelerate, BRAKE to brake/reverse, and E when a portfolio zone is nearby. Landscape orientation is recommended for the full driving view.
