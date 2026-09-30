@@ -1,0 +1,167 @@
+* {
+    box-sizing: border-box
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #050505;
+    font-family: Inter, system-ui, sans-serif
+}
+
+canvas {
+    display: block
+}
+
+#loading {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: #050505;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 18px;
+    font-size: 11px;
+    letter-spacing: 4px;
+    transition: opacity .6s
+}
+
+.loader {
+    width: 34px;
+    height: 34px;
+    border: 2px solid #333;
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .8s linear infinite
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+#hud {
+    position: fixed;
+    z-index: 5;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 28px 34px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    pointer-events: none
+}
+
+.brand {
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -1px
+}
+
+.brand span {
+    color: #8cff00
+}
+
+.hint {
+    font-size: 10px;
+    letter-spacing: 2px;
+    opacity: .55
+}
+
+.hidden {
+    opacity: 0;
+    pointer-events: none !important
+}
+
+#crosshair {
+    position: fixed;
+    z-index: 5;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    opacity: .28;
+    font-size: 18px;
+    pointer-events: none
+}
+
+#info {
+    position: fixed;
+    z-index: 10;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(420px, calc(100vw - 40px));
+    padding: 32px;
+    background: rgba(10, 10, 10, .92);
+    border: 1px solid rgba(255, 255, 255, .12);
+    color: #fff;
+    backdrop-filter: blur(18px);
+    transition: .3s;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, .45)
+}
+
+#info h2 {
+    font-size: 30px;
+    margin: 0 0 12px
+}
+
+.eyebrow {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: #8cff00;
+    font-weight: 700;
+    margin-bottom: 12px
+}
+
+.desc {
+    color: #aaa;
+    line-height: 1.7;
+    font-size: 14px
+}
+
+#closeInfo {
+    position: absolute;
+    right: 14px;
+    top: 10px;
+    border: 0;
+    background: none;
+    color: #fff;
+    font-size: 28px;
+    cursor: pointer
+}
+
+#mobileHint {
+    display: none
+}
+
+@media(max-width:700px) {
+    .hint {
+        display: none
+    }
+
+    .brand {
+        font-size: 18px
+    }
+
+    #hud {
+        padding: 22px
+    }
+
+    .info {
+        right: 20px
+    }
+
+    .mobileHint {
+        display: block
+    }
+}
