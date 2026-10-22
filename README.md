@@ -38,3 +38,14 @@ Changes were patched into the existing `index.html` (car, controls, modals, CONF
 - **Collisions:** benches, bins and lamp posts have circle colliders (cars are pushed out, speed drops).
 - **Pedestrian hit:** an oriented-box test against the car triggers a pause, slight push-away, and the floating text "hati-hati kalau menyetir" above that NPC (pool of 3 reusable elements, 4 s cooldown per NPC).
 - Not browser-tested.
+
+## Update: mobile joystick and HUD
+- **Joystick:** on touch devices the left/right buttons are replaced by an analog joystick (Pointer Events + pointer capture). Horizontal travel gives a smoothed steering value from -1 to 1 (10% dead zone) that feeds the existing steering logic; it resets on release, cancel, blur, menu or modal open. Right side keeps boost, interact, brake and gas buttons in a 2x2 grid with safe-area padding.
+- **Controls help:** a small `?` button next to the hamburger opens a compact tips panel (desktop or touch text); it opens by default on desktop. The tips are no longer inside the menu.
+- **Hamburger:** one toggle button that switches between ☰ and ×; the extra Close button was removed. Esc and a tap on the backdrop also close it.
+- Not browser- or device-tested.
+
+## Update: mobile jump and camera buttons
+- The square button is now **Jump** (tap-triggered, ground-only, one jump per tap; keyboard Space unchanged) and the triangle button is now **Camera** (toggles Drone/Chase smoothly and shows a short "DRONE VIEW"/"CHASE VIEW" tag; the `C` key still works).
+- Because the triangle was the gas button, **gas and reverse moved to the joystick's vertical axis** (push up = gas, pull down = reverse/brake). Left/right still steers.
+- Not browser- or device-tested.

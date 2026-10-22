@@ -22,7 +22,7 @@ button:hover{background:var(--yellow)}button.pri{background:var(--ink);color:var
 #dbg{font:12px monospace;background:rgba(39,37,34,.8);color:#fff;padding:.2rem .5rem;border-radius:8px}
 #prompt{position:fixed;left:50%;bottom:22%;transform:translateX(-50%);z-index:10;background:var(--ink);color:var(--cream);padding:.6rem 1.2rem;border-radius:14px;font-weight:800;display:none}
 #legend{position:fixed;left:.6rem;bottom:.6rem;z-index:10;background:rgba(255,246,233,.92);border:2px solid var(--ink);border-radius:12px;padding:.5rem .8rem;font-size:.8rem;display:none;max-width:260px}
-#boost{position:fixed;left:50%;bottom:.8rem;transform:translateX(-50%);width:160px;height:8px;background:rgba(0,0,0,.25);border-radius:4px;z-index:10;display:none}#boost i{display:block;height:100%;background:var(--yellow);border-radius:4px}
+#boost{position:fixed;left:50%;top:.9rem;transform:translateX(-50%);width:120px;height:8px;background:rgba(0,0,0,.25);border-radius:4px;z-index:10;display:none}#boost i{display:block;height:100%;background:var(--yellow);border-radius:4px}
 #touch{position:fixed;inset:auto 0 0 0;z-index:11;display:none;justify-content:space-between;padding:.8rem;pointer-events:none;touch-action:none}
 #touch .g{display:flex;gap:.6rem;pointer-events:auto}#touch button{width:68px;height:68px;border-radius:50%;font-size:1.3rem;opacity:.88;touch-action:none;user-select:none}
 .msg{position:fixed;inset:0;z-index:40;display:none;place-items:center;background:rgba(39,37,34,.55)}
@@ -31,18 +31,25 @@ dialog::backdrop{background:rgba(39,37,34,.55)}dialog h2{margin-top:0;font:900 1
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.7rem}.card{border:2px solid var(--ink);border-radius:12px;padding:.7rem;background:#fff}
 .card h3{margin:0 0 .3rem;font-size:1rem}.tag{display:inline-block;background:var(--yellow);border-radius:8px;padding:0 .45rem;margin:.1rem;font-size:.78rem}
 .ph{color:#7a5a3a;font-style:italic}.x{float:right}
-#hud{z-index:31!important}#hud #burger{display:flex;flex-direction:column;justify-content:center;gap:5px;width:46px;height:46px;padding:0 11px;border-radius:12px}
-#burger span{display:block;height:3px;background:var(--ink);border-radius:2px;transition:transform .2s,opacity .2s}
-#burger[aria-expanded=true] span:nth-child(1){transform:translateY(8px) rotate(45deg)}#burger[aria-expanded=true] span:nth-child(2){opacity:0}#burger[aria-expanded=true] span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+#hud{z-index:31!important}#hud #burger,#hud #help{display:grid;place-items:center;width:46px;height:46px;padding:0;border-radius:12px;font-size:1.6rem;line-height:1}#hud #help{font-size:1.2rem}
 #scrim{position:fixed;inset:0;z-index:29;background:rgba(39,37,34,.35);display:none}
 #menu{position:fixed;top:0;left:0;bottom:0;width:min(320px,86vw);z-index:30;background:rgba(255,246,233,.97);border-right:3px solid var(--ink);padding:4rem 1rem 1rem;overflow-y:auto;transform:translateX(-105%);visibility:hidden;transition:transform .25s,visibility 0s .25s}
 #menu.open{transform:none;visibility:visible;transition:transform .25s}
 #menu h2{font:900 1.2rem Impact,sans-serif;margin:0 0 .5rem}#menu h3{margin:.9rem 0 .4rem;font-size:.95rem}
 #menu nav,#menu .set{display:flex;flex-direction:column;gap:.4rem}#menu nav button,#menu .set button{width:100%;text-align:left}
-#mX{position:absolute;top:.7rem;right:.7rem}#menu details{margin-top:.9rem;font-size:.85rem}
+#menu details{margin-top:.9rem;font-size:.85rem}
 .hit{position:fixed;left:0;top:0;z-index:12;pointer-events:none;background:#fff;color:var(--ink);border:2px solid var(--ink);border-radius:10px;padding:.15rem .6rem;font-weight:800;font-size:.85rem;white-space:nowrap;opacity:0;transition:opacity .3s;will-change:transform}
+#touch{align-items:flex-end;padding:.8rem;padding-bottom:max(.8rem,env(safe-area-inset-bottom));padding-left:max(.8rem,env(safe-area-inset-left));padding-right:max(.8rem,env(safe-area-inset-right))}
+#touch .g.r{display:grid;grid-template-columns:repeat(2,64px);gap:.5rem}#touch .g.r button{width:64px;height:64px}
+#joy{position:relative;width:130px;height:130px;border-radius:50%;background:rgba(255,246,233,.5);border:3px solid var(--ink);pointer-events:auto;touch-action:none;user-select:none}
+#joyKnob{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:var(--ink);opacity:.85;pointer-events:none}
+#tips{position:fixed;left:.6rem;bottom:.6rem;z-index:10;max-width:280px;background:rgba(255,246,233,.94);border:2px solid var(--ink);border-radius:12px;padding:.4rem .8rem;font-size:.78rem}
+#tips p{margin:.2rem 0}.t-touch{display:none}
+@media(pointer:coarse){#tips{bottom:auto;top:3.7rem;max-width:calc(100vw - 9rem)}.t-touch{display:block}.t-desk{display:none}}
+#touch button svg{pointer-events:none;display:block;margin:auto}
+#camTag{position:fixed;top:4rem;left:50%;transform:translateX(-50%);z-index:12;background:var(--ink);color:var(--cream);padding:.2rem .8rem;border-radius:10px;font-weight:800;font-size:.8rem;opacity:0;transition:opacity .25s;pointer-events:none}
 #fb{position:fixed;inset:0;z-index:5;background:var(--ground)}
-@media(max-width:700px){#side{top:auto;bottom:6.2rem}}
+@media(max-width:700px){#mm{width:100px;height:100px}}@media(max-width:480px){#hud .brand{display:none}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style></head>
 <body>
@@ -53,16 +60,19 @@ dialog::backdrop{background:rgba(39,37,34,.55)}dialog h2{margin-top:0;font:900 1
   <div class="row"><button class="pri" id="go">START EXPLORING</button><button id="view">VIEW PORTFOLIO</button></div>
   <small>Drive: WASD / arrows · Shift boost · Ctrl or B brake · Space jump · Enter open zone · Drag to orbit, wheel to zoom. On touch use the on-screen buttons.</small>
 </section>
-<header id="hud"><button id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button><span class="brand" id="brand"></span></header>
+<header id="hud"><button id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menu"><span id="bIcon">☰</span></button><button id="help" aria-label="Controls help" aria-expanded="false" aria-controls="tips">?</button><span class="brand" id="brand"></span></header>
 <div id="scrim"></div>
-<aside id="menu" aria-hidden="true" aria-label="Main menu"><button id="mX">✕ Close</button><h2 id="mName"></h2>
+<aside id="menu" aria-hidden="true" aria-label="Main menu"><h2 id="mName"></h2>
  <h3>Portfolio</h3><nav id="nav" aria-label="Portfolio sections"></nav>
  <h3>Settings</h3><div class="set"><button id="bC">Camera: Drone</button><button id="bQ">Quality: AUTO</button><button id="bS">Sound off</button><button id="bR">Respawn</button></div>
- <details><summary>Controls</summary><p>W/S/A/D or arrows: drive · Shift: boost · Ctrl/B: brake · Space: jump · Enter: open zone · M: minimap · L: sound · R: respawn · H: honk · C: drone/chase camera · Esc: close. Drag to orbit, wheel to zoom. On touch use the on-screen buttons.</p></details></aside>
+</aside>
 <div id="side"><canvas id="mm" width="140" height="140"></canvas><div id="dbg"></div></div>
 <div id="prompt"></div><div id="boost"><i></i></div>
-<div id="touch"><div class="g"><button data-k="left">◀</button><button data-k="right">▶</button></div>
- <div class="g"><button data-k="brake">■</button><button data-k="boost">⚡</button><button data-k="act">E</button><button data-k="up">▲</button></div></div>
+<div id="touch"><div id="joy" aria-label="Steering joystick"><div id="joyKnob"></div></div><div class="g r"><button data-k="boost">⚡</button><button data-k="act">E</button><button data-k="jumpT" aria-label="Jump"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11l6-6 6 6M6 18l6-6 6 6"/></svg></button><button data-k="cam" aria-label="Switch camera"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button></div></div>
+<aside id="tips" hidden aria-label="Controls help"><b>Controls</b>
+ <p class="t-desk">W A S D / arrows: drive · Space: jump · Shift: boost · Ctrl or B: brake · Enter: open zone · C: camera · R: respawn · Drag to orbit, wheel to zoom</p>
+ <p class="t-touch">Left joystick: left/right steers, up is gas, down is reverse/brake. Right buttons: ⚡ boost, E interact, jump, camera (Drone/Chase). Drag the scene to look around, pinch to zoom.</p></aside>
+<div id="camTag"></div>
 <div class="hit" id="hit0">hati-hati kalau menyetir</div><div class="hit" id="hit1">hati-hati kalau menyetir</div><div class="hit" id="hit2">hati-hati kalau menyetir</div>
 <dialog id="dlg" aria-labelledby="dT"><button class="x" id="dX" aria-label="Close">✕ Close</button><h2 id="dT"></h2><div id="dB"></div></dialog>
 <div class="msg" id="err"><div class="card" id="errB" style="max-width:420px"></div></div>
@@ -117,20 +127,20 @@ const dlg=$('dlg');let modalOpen=false,menuOpen=false;
 function openPanel(id){toggleMenu(false,true);const p=PANELS[id];$('dT').textContent=p.t;$('dB').innerHTML=p.h();modalOpen=true;resetKeys();if(!dlg.open)dlg.showModal();$('dX').focus()}
 dlg.addEventListener('close',()=>{modalOpen=false});
 $('dX').onclick=()=>dlg.close();
-function toggleMenu(f,nf){if(f===menuOpen)return;menuOpen=f;$('menu').classList.toggle('open',f);$('scrim').style.display=f?'block':'none';$('burger').setAttribute('aria-expanded',String(f));$('menu').setAttribute('aria-hidden',String(!f));if(f){resetKeys();$('nav').firstChild.focus()}else if(!nf)$('burger').focus()}
-$('burger').onclick=()=>toggleMenu(!menuOpen);$('mX').onclick=()=>toggleMenu(false);$('scrim').onclick=()=>toggleMenu(false);
+function toggleMenu(f,nf){if(f===menuOpen)return;menuOpen=f;$('bIcon').textContent=f?'×':'☰';$('menu').classList.toggle('open',f);$('scrim').style.display=f?'block':'none';$('burger').setAttribute('aria-expanded',String(f));$('menu').setAttribute('aria-hidden',String(!f));if(f){resetKeys();$('nav').firstChild.focus()}else if(!nf)$('burger').focus()}
+$('burger').onclick=()=>toggleMenu(!menuOpen);$('scrim').onclick=()=>toggleMenu(false);
 for(const id in PANELS){const b=document.createElement('button');b.textContent=PANELS[id].t;b.onclick=()=>openPanel(id);$('nav').appendChild(b)}
 $('view').onclick=()=>{openPanel('about')};
 let started=false,world=null;
 function fail(m){$('errB').textContent=m;$('err').style.display='grid';setTimeout(()=>$('err').style.display='none',6000)}
 
 /* ============ Input ============ */
-const K={up:0,down:0,left:0,right:0,boost:0,brake:0,jump:0};let held={};
-function resetKeys(){for(const k in K)K[k]=0;held={}}
+const K={up:0,down:0,left:0,right:0,boost:0,brake:0,jump:0,steer:0,ty:0,jumpT:0};let held={};
+function resetKeys(){for(const k in K)K[k]=0;held={};joyReset()}
 const MAP={KeyW:'up',ArrowUp:'up',KeyS:'down',ArrowDown:'down',KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right',ShiftLeft:'boost',ShiftRight:'boost',ControlLeft:'brake',ControlRight:'brake',KeyB:'brake',Space:'jump'};
 const typing=e=>/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)||e.target.isContentEditable;
 addEventListener('keydown',e=>{if(typing(e))return;
- if(e.code==='Escape'){if(dlg.open)dlg.close();else if(menuOpen)toggleMenu(false);return}
+ if(e.code==='Escape'){if(dlg.open)dlg.close();else if(menuOpen)toggleMenu(false);else if(!$('tips').hidden)setTips(false);return}
  if(!started||modalOpen||menuOpen)return;
  if(MAP[e.code]){K[MAP[e.code]]=1;e.preventDefault()}
  else if(e.repeat)return;
@@ -140,10 +150,22 @@ addEventListener('keydown',e=>{if(typing(e))return;
  else if(e.code==='KeyH')honk();else if(e.code==='KeyC')world&&world.camMode++;});
 addEventListener('keyup',e=>{if(MAP[e.code])K[MAP[e.code]]=0});
 addEventListener('blur',resetKeys);
-document.querySelectorAll('#touch button').forEach(b=>{const k=b.dataset.k;const on=e=>{e.preventDefault();if(modalOpen||menuOpen)return;if(k==='act'){world&&world.near&&openPanel(world.near.id)}else K[k]=1};
- b.addEventListener('pointerdown',on);['pointerup','pointercancel','pointerleave'].forEach(t=>b.addEventListener(t,()=>{if(k!=='act')K[k]=0}))});
+document.querySelectorAll('#touch button').forEach(b=>{const k=b.dataset.k;const on=e=>{e.preventDefault();if(modalOpen||menuOpen)return;if(k==='act'){world&&world.near&&openPanel(world.near.id)}else if(k==='cam'){world&&world.camMode++}else K[k]=1};
+ b.addEventListener('pointerdown',on);['pointerup','pointercancel','pointerleave'].forEach(t=>b.addEventListener(t,()=>{if(k!=='act'&&k!=='cam')K[k]=0}))});
 $('bC').onclick=()=>{world&&world.camMode++;toggleMenu(false)};
 $('bR').onclick=()=>{world&&world.respawn();toggleMenu(false)};
+/* virtual analog joystick (Pointer Events) -> K.steer in [-1,1], smoothed by the existing S.steer logic */
+const joy=$('joy'),jk=$('joyKnob');let jid=null;
+function joyReset(){jid=null;K.steer=0;K.ty=0;jk.style.transition='transform .12s ease-out';jk.style.transform='translate(0,0)'}
+function joyMove(e){const r=joy.getBoundingClientRect(),m=r.width*.32;let dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);const d=Math.hypot(dx,dy);if(d>m){dx*=m/d;dy*=m/d}
+ jk.style.transform=`translate(${dx}px,${dy}px)`;const n=dx/m,a=Math.abs(n);K.steer=a<.1?0:-Math.sign(n)*Math.pow((a-.1)/.9,1.2);const ny=dy/m;K.ty=ny<-.35?1:ny>.35?-1:0}
+joy.addEventListener('pointerdown',e=>{if(modalOpen||menuOpen||jid!==null)return;e.preventDefault();jid=e.pointerId;joy.setPointerCapture(e.pointerId);jk.style.transition='none';joyMove(e)});
+joy.addEventListener('pointermove',e=>{if(e.pointerId!==jid)return;if(modalOpen||menuOpen)joyReset();else joyMove(e)});
+for(const t of['pointerup','pointercancel','lostpointercapture'])joy.addEventListener(t,e=>{if(e.pointerId===jid)joyReset()});
+addEventListener('blur',joyReset);document.addEventListener('visibilitychange',()=>{if(document.hidden)joyReset()});
+/* controls help HUD (outside the hamburger menu) */
+function setTips(f){$('tips').hidden=!f;$('help').setAttribute('aria-expanded',String(f))}
+$('help').onclick=()=>setTips($('tips').hidden);
 /* simple WebAudio (honk only, no external audio files) */
 let actx=null,soundOn=false;
 function toggleSound(){soundOn=!soundOn;$('bS').textContent=soundOn?'Sound on':'Sound off'}
@@ -296,7 +318,7 @@ async function build(){
  /* ---- state ---- */
  const S={x:0,z:0,y:0,vy:0,h:0,v:0,steer:0,boost:1,pitch:0,roll:0,spawn:1};
  const world={near:null,camMode:0,respawn(){Object.assign(S,{x:0,z:0,y:0,vy:0,h:0,v:0,spawn:0})}};
- let camYaw=0,zoom=1,drag=false,lx=0,ly=0,pOff=0,cD=14,cPh=.95,lastCM=-1;const cp=new THREE.Vector3(),tgt=new THREE.Vector3();cam.position.set(0,12,-9);
+ let camYaw=0,zoom=1,drag=false,lx=0,ly=0,pOff=0,cD=14,cPh=.95,lastCM=-1,camT=0;const cp=new THREE.Vector3(),tgt=new THREE.Vector3();cam.position.set(0,12,-9);
  canvas.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;ly=e.clientY;canvas.setPointerCapture(e.pointerId)});
  canvas.addEventListener('pointermove',e=>{if(!drag)return;camYaw-=(e.clientX-lx)*.006;pOff=Math.min(.3,Math.max(-.3,pOff+(e.clientY-ly)*.004));lx=e.clientX;ly=e.clientY});
  canvas.addEventListener('pointerup',()=>drag=false);canvas.addEventListener('pointercancel',()=>drag=false);
@@ -321,7 +343,7 @@ async function build(){
  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
  function step(dt){
   const on=started&&!modalOpen&&!menuOpen;
-  let thr=on?(K.up-K.down):0,st=on?(K.left-K.right):0,br=on&&K.brake,bo=on&&K.boost&&S.boost>0&&thr>0;
+  let thr=on?Math.max(-1,Math.min(1,K.up-K.down+K.ty)):0,st=on?Math.max(-1,Math.min(1,K.left-K.right+K.steer)):0,br=on&&K.brake,bo=on&&K.boost&&S.boost>0&&thr>0;
   if(bo)S.boost=Math.max(0,S.boost-dt*.45);else S.boost=Math.min(1,S.boost+dt*.2);
   const maxV=bo?20:12;
   if(thr>0&&S.v>=-.1)S.v+=thr*(bo?26:14)*dt;else if(thr<0)S.v+=(S.v>0?-24:-9)*dt; else S.v-=Math.sign(S.v)*Math.min(Math.abs(S.v),4*dt);
@@ -330,7 +352,7 @@ async function build(){
   S.v=Math.max(-6,Math.min(maxV,S.v));
   S.steer+=(st-S.steer)*Math.min(1,dt*10);
   S.h+=S.steer*1.9*Math.max(-1,Math.min(1,S.v/5))*dt;
-  if(on&&K.jump&&S.y<=.001){S.vy=7}
+  if(on&&(K.jump||K.jumpT)&&S.y<=.001){S.vy=7}K.jumpT=0;
   S.vy-=22*dt;S.y+=S.vy*dt;if(S.y<0){S.y=0;S.vy=0}
   fwd.x=Math.sin(S.h);fwd.z=Math.cos(S.h);
   S.x+=fwd.x*S.v*dt;S.z+=fwd.z*S.v*dt;
@@ -349,7 +371,7 @@ async function build(){
   npcStep(dt,tt);
   // camera
   camYaw*=drag?1:Math.max(0,1-dt*1.5);
-  camYaw=Math.max(-1.6,Math.min(1.6,camYaw));const drone=world.camMode%2===0,kd=Math.min(1,dt*3);if(world.camMode!==lastCM){lastCM=world.camMode;$('bC').textContent='Camera: '+(drone?'Drone':'Chase')}
+  camYaw=Math.max(-1.6,Math.min(1.6,camYaw));const drone=world.camMode%2===0,kd=Math.min(1,dt*3);if(world.camMode!==lastCM){const first=lastCM<0;lastCM=world.camMode;$('bC').textContent='Camera: '+(drone?'Drone':'Chase');if(!first){const t=$('camTag');t.textContent=drone?'DRONE VIEW':'CHASE VIEW';t.style.opacity=1;clearTimeout(camT);camT=setTimeout(()=>t.style.opacity=0,1200)}}
   cD+=((drone?14:9)*zoom*(innerWidth<700?.8:1)-cD)*kd;cPh+=((drone?.95:.38)+pOff-cPh)*kd;
   const dist=cD,a=S.h+camYaw,ph=cPh,sp=Math.max(0,S.v)*.05;
   tgt.set(S.x-Math.sin(a)*Math.cos(ph)*(dist+sp),Math.max(1.2,S.y+Math.sin(ph)*dist+.8),S.z-Math.cos(a)*Math.cos(ph)*(dist+sp));
@@ -378,7 +400,8 @@ async function build(){
 build().then(w=>{world=w}).catch(e=>{console.error(e);$('fb').style.display='none';$('c').style.display='none';
  $('start').style.background='linear-gradient(135deg,#F5A15B,#F58B46)';fail('3D scene could not start: '+e.message+' Portfolio sections remain available via the buttons.')});
 function begin(){started=true;$('start').style.display='none';$('hud').style.display='flex';$('side').style.display='flex';$('boost').style.display='block';
-  if(matchMedia('(pointer:coarse)').matches)$('touch').style.display='flex'}
+  if(matchMedia('(pointer:fine)').matches)setTips(true);
+ if(matchMedia('(pointer:coarse)').matches)$('touch').style.display='flex'}
 $('go').onclick=()=>{if(!world){fail('The 3D world is still loading or failed. Use VIEW PORTFOLIO.');return}begin()};
 $('view').addEventListener('click',()=>{$('hud').style.display='flex'});
 dlg.addEventListener('close',()=>{if(!started&&world===null)return;});
