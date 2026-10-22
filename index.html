@@ -1,70 +1,385 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0a0714">
-  <title>Naufal — 3D Portfolio V21</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./style.css">
-</head>
-
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Naufal Dawam Dzikrillah — 3D Portfolio</title>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+<style>
+:root{--ground:#F5A15B;--orange:#F58B46;--cream:#FFF6E9;--yellow:#E4E96C;--ink:#272522;--blue:#6A8FA3}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#f7c99a;color:var(--ink);font:16px/1.5 "Trebuchet MS","Segoe UI",sans-serif}
+canvas#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+button{font:inherit;cursor:pointer;border:2px solid var(--ink);background:var(--cream);color:var(--ink);border-radius:12px;padding:.45rem .9rem;font-weight:700}
+button:hover{background:var(--yellow)}button.pri{background:var(--ink);color:var(--cream)}button.pri:hover{background:var(--orange);color:var(--ink)}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+#start{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:center;padding:6vw;background:linear-gradient(135deg,var(--ground),var(--orange) 60%,#e8734a)}
+#start h1{font:900 clamp(2rem,7vw,5.5rem)/.95 Impact,"Arial Black",sans-serif;margin:0 0 .6rem;color:var(--cream);text-shadow:4px 4px 0 var(--ink);letter-spacing:.01em}
+#start h2{margin:0 0 .3rem;font-size:clamp(1rem,2.4vw,1.6rem)}#start p{margin:0 0 1.5rem}
+#start .row{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:1.5rem}#start small{max-width:46ch;display:block}
+#hud{position:fixed;top:0;left:0;right:0;z-index:10;display:none;gap:.5rem;padding:.6rem;align-items:center;flex-wrap:wrap;pointer-events:none}
+#hud>*{pointer-events:auto}#hud .brand{font:900 1rem Impact,sans-serif;background:var(--ink);color:var(--cream);padding:.35rem .8rem;border-radius:12px}
+#hud nav{display:flex;gap:.3rem;flex-wrap:wrap}#hud button{padding:.3rem .65rem;font-size:.85rem}
+#side{position:fixed;right:.6rem;top:3.4rem;z-index:10;display:none;flex-direction:column;gap:.4rem;align-items:flex-end}
+#mm{width:140px;height:140px;border:2px solid var(--ink);border-radius:50%;background:rgba(255,246,233,.8)}
+#dbg{font:12px monospace;background:rgba(39,37,34,.8);color:#fff;padding:.2rem .5rem;border-radius:8px}
+#prompt{position:fixed;left:50%;bottom:22%;transform:translateX(-50%);z-index:10;background:var(--ink);color:var(--cream);padding:.6rem 1.2rem;border-radius:14px;font-weight:800;display:none}
+#legend{position:fixed;left:.6rem;bottom:.6rem;z-index:10;background:rgba(255,246,233,.92);border:2px solid var(--ink);border-radius:12px;padding:.5rem .8rem;font-size:.8rem;display:none;max-width:260px}
+#boost{position:fixed;left:50%;bottom:.8rem;transform:translateX(-50%);width:160px;height:8px;background:rgba(0,0,0,.25);border-radius:4px;z-index:10;display:none}#boost i{display:block;height:100%;background:var(--yellow);border-radius:4px}
+#touch{position:fixed;inset:auto 0 0 0;z-index:11;display:none;justify-content:space-between;padding:.8rem;pointer-events:none;touch-action:none}
+#touch .g{display:flex;gap:.6rem;pointer-events:auto}#touch button{width:68px;height:68px;border-radius:50%;font-size:1.3rem;opacity:.88;touch-action:none;user-select:none}
+.msg{position:fixed;inset:0;z-index:40;display:none;place-items:center;background:rgba(39,37,34,.55)}
+dialog{border:3px solid var(--ink);border-radius:18px;background:var(--cream);color:var(--ink);width:min(720px,94vw);max-height:86vh;overflow:auto;padding:1.2rem 1.5rem}
+dialog::backdrop{background:rgba(39,37,34,.55)}dialog h2{margin-top:0;font:900 1.8rem Impact,sans-serif}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.7rem}.card{border:2px solid var(--ink);border-radius:12px;padding:.7rem;background:#fff}
+.card h3{margin:0 0 .3rem;font-size:1rem}.tag{display:inline-block;background:var(--yellow);border-radius:8px;padding:0 .45rem;margin:.1rem;font-size:.78rem}
+.ph{color:#7a5a3a;font-style:italic}.x{float:right}
+#hud{z-index:31!important}#hud #burger{display:flex;flex-direction:column;justify-content:center;gap:5px;width:46px;height:46px;padding:0 11px;border-radius:12px}
+#burger span{display:block;height:3px;background:var(--ink);border-radius:2px;transition:transform .2s,opacity .2s}
+#burger[aria-expanded=true] span:nth-child(1){transform:translateY(8px) rotate(45deg)}#burger[aria-expanded=true] span:nth-child(2){opacity:0}#burger[aria-expanded=true] span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+#scrim{position:fixed;inset:0;z-index:29;background:rgba(39,37,34,.35);display:none}
+#menu{position:fixed;top:0;left:0;bottom:0;width:min(320px,86vw);z-index:30;background:rgba(255,246,233,.97);border-right:3px solid var(--ink);padding:4rem 1rem 1rem;overflow-y:auto;transform:translateX(-105%);visibility:hidden;transition:transform .25s,visibility 0s .25s}
+#menu.open{transform:none;visibility:visible;transition:transform .25s}
+#menu h2{font:900 1.2rem Impact,sans-serif;margin:0 0 .5rem}#menu h3{margin:.9rem 0 .4rem;font-size:.95rem}
+#menu nav,#menu .set{display:flex;flex-direction:column;gap:.4rem}#menu nav button,#menu .set button{width:100%;text-align:left}
+#mX{position:absolute;top:.7rem;right:.7rem}#menu details{margin-top:.9rem;font-size:.85rem}
+.hit{position:fixed;left:0;top:0;z-index:12;pointer-events:none;background:#fff;color:var(--ink);border:2px solid var(--ink);border-radius:10px;padding:.15rem .6rem;font-weight:800;font-size:.85rem;white-space:nowrap;opacity:0;transition:opacity .3s;will-change:transform}
+#fb{position:fixed;inset:0;z-index:5;background:var(--ground)}
+@media(max-width:700px){#side{top:auto;bottom:6.2rem}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head>
 <body>
-  <div id="loading">
-    <div class="loading-logo">Naufal Dawam Dz<span></span></div>
-    <div class="loading-text">Portofolio Theme World<span></span></div>
-    <div class="loading-bar"><i></i></div>
-    <div class="loading-text">BUILDING WORLD</div>
-  </div>
+<canvas id="c" aria-label="Interactive 3D driving portfolio"></canvas>
+<div id="fb"></div>
+<section id="start">
+  <h1 id="sName"></h1><h2 id="sHead"></h2><p id="sSub"></p>
+  <div class="row"><button class="pri" id="go">START EXPLORING</button><button id="view">VIEW PORTFOLIO</button></div>
+  <small>Drive: WASD / arrows · Shift boost · Ctrl or B brake · Space jump · Enter open zone · Drag to orbit, wheel to zoom. On touch use the on-screen buttons.</small>
+</section>
+<header id="hud"><button id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button><span class="brand" id="brand"></span></header>
+<div id="scrim"></div>
+<aside id="menu" aria-hidden="true" aria-label="Main menu"><button id="mX">✕ Close</button><h2 id="mName"></h2>
+ <h3>Portfolio</h3><nav id="nav" aria-label="Portfolio sections"></nav>
+ <h3>Settings</h3><div class="set"><button id="bC">Camera: Drone</button><button id="bQ">Quality: AUTO</button><button id="bS">Sound off</button><button id="bR">Respawn</button></div>
+ <details><summary>Controls</summary><p>W/S/A/D or arrows: drive · Shift: boost · Ctrl/B: brake · Space: jump · Enter: open zone · M: minimap · L: sound · R: respawn · H: honk · C: drone/chase camera · Esc: close. Drag to orbit, wheel to zoom. On touch use the on-screen buttons.</p></details></aside>
+<div id="side"><canvas id="mm" width="140" height="140"></canvas><div id="dbg"></div></div>
+<div id="prompt"></div><div id="boost"><i></i></div>
+<div id="touch"><div class="g"><button data-k="left">◀</button><button data-k="right">▶</button></div>
+ <div class="g"><button data-k="brake">■</button><button data-k="boost">⚡</button><button data-k="act">E</button><button data-k="up">▲</button></div></div>
+<div class="hit" id="hit0">hati-hati kalau menyetir</div><div class="hit" id="hit1">hati-hati kalau menyetir</div><div class="hit" id="hit2">hati-hati kalau menyetir</div>
+<dialog id="dlg" aria-labelledby="dT"><button class="x" id="dX" aria-label="Close">✕ Close</button><h2 id="dT"></h2><div id="dB"></div></dialog>
+<div class="msg" id="err"><div class="card" id="errB" style="max-width:420px"></div></div>
 
-  <div id="topbar">
-    <div class="brand">Naufal Dawam Dz</div>
-    <div class="top-actions">
-      <div class="world-status"><span class="dot"></span> Interactive Portofolio World</div>
-      <button id="modeToggle" type="button" aria-label="Switch to night">☀ DAY</button>
-    </div>
-  </div>
+<script type="module">
+/* ============ CONFIG: edit all personal content here ============ */
+const CONFIG={
+ name:"Naufal Dawam Dzikrillah",title:"Backend Developer / Software Engineer",
+ headline:"BUILDING DIGITAL EXPERIENCES",subtitle:"Backend Developer • Software Engineer",
+ intro:"Software developer with more than one year of experience in developing digital solutions. Passionate about tackling challenges, continuously learning new technologies, and improving technical skills.",
+ interests:["Tackling challenges","Continuous learning","Reliable and efficient software","Interactive digital experiences"],
+ summary:"I take responsibility for the work entrusted to me, have a strong sense of curiosity, and am passionate about continuously learning new skills and developing my competencies in software development. Stats from my portfolio site: 4+ years experience, 10+ completed projects, 3+ companies worked.",
+ cv:"https://drive.google.com/file/d/1WXPLWALPBIn45oooKFmN28oNy3QWe8AU/view?usp=sharing",
+ education:[{school:"Universitas Indraprasta PGRI (Unindra)",major:"Teknik Informatika (S1)",period:"2024 - Present"},
+  {school:"SMK Informatika YASMA",major:"Computer and Network Engineering",period:"2015 - 2018"}],
+ skills:{"Backend development":["Java Spring Boot 80%","Dotnet 70%","Laravel 50%","Gin (Go) 45%"],
+  "Frontend development":["React JS 70%","Next JS 80%","Vue JS 60%","Flutter 50%"]},
+ projects:[
+  {title:"Integrasi AI MKRI",desc:"Integration for the client Mahkamah Konstitusi Republik Indonesia (MKRI).",status:"Go Live",tech:[],role:"",repo:"",demo:"https://ai.mkri.id/ai-page-publik",thumb:""},
+  {title:"Sales Order iProm PNRE",desc:"Sales order iProm for Pertamina New and Renewable Energy (PNRE/PPI).",status:"Staging User",tech:[],role:"",repo:"",demo:"https://dev-ppi-iprom.air.id/",thumb:""},
+  {title:"MCU Dashboard PNRE",desc:"MCU dashboard for Pertamina New and Renewable Energy (PNRE/PPI).",status:"Staging User",tech:[],role:"",repo:"",demo:"https://dev-ppi-mcu.air.id/",thumb:""},
+  {title:"Fitur EDRT JMRB",desc:"Added the EDRT feature to the E-Procurement dashboard of Jasa Marga Related Business (JMRB).",status:"Go Live",tech:[],role:"",repo:"",demo:"https://eproc.jmrb.co.id/",thumb:""},
+  {title:"Pencatatan BBM PNRE",desc:"Fuel usage recording for all Pertamina New and Renewable Energy (PNRE/PPI) employees.",status:"On Development",tech:[],role:"",repo:"",demo:"https://ppi-fm.air.id/login",thumb:""},
+  {title:"Webview Martipay",desc:"Webview for Link Bank DKI as a payment in the Martipay application.",status:"Go Live in the MyMRTJ app",tech:[],role:"",repo:"",demo:"https://play.google.com/store/search?q=my%20mrtj&c=apps&hl=id",thumb:""},
+  {title:"Payment Method ZISWAF",desc:"Payment gateway / payment method for ZISWAF Bank DKI Syariah.",status:"On Hold, awaiting Bank Indonesia check",tech:[],role:"",repo:"",demo:"https://jakone.mobi/jakone-blog/jakone-zakatfitrah20",thumb:""},
+  {title:"Dashboard Mola.Tv",desc:"Responsive website version of Mola TV and a guestbook for internal apps.",status:"Enhancement and Go Live",tech:[],role:"",repo:"",demo:"",thumb:""},
+  {title:"Simple Landing Page",desc:"Simple landing page for the company CV. Cipta Indah Karya Sportindo.",status:"Go Live",tech:[],role:"",repo:"",demo:"https://webciks-v2-fix.vercel.app",thumb:""}],
+ experience:[
+  {org:"PT. PLN Icon Plus",role:"Backend Developer",period:"Dec 2024 - Present",duties:[],tech:[],wins:[]},
+  {org:"PT. Bank DKI / PT. Bank Jakarta",role:"Java Programmer",period:"Nov 2023 - Dec 2024",duties:[],tech:[],wins:[]},
+  {org:"PT. Polaris Edu Partners",role:"IT Support",period:"Aug 2022 - Oct 2023",duties:[],tech:[],wins:[]},
+  {org:"CV. Cipta Indah Karya Sportindo",role:"Technical Engineer",period:"Aug 2020 - Dec 2021",duties:[],tech:[],wins:[]},
+  {org:"PT. Padepokan Tujuh Sembilan",role:"Technical Writer",period:"Jun 2020 - Jul 2020",duties:[],tech:[],wins:[]},
+  {org:"PT. Global Media Visual (Mola.Tv)",role:"Intern Front-end Developer",period:"Jan 2020 - Jun 2020",duties:[],tech:[],wins:[]}],
+ contact:{email:"naufal.dawam.dz@gmail.com",github:"https://github.com/naufaldawam",linkedin:"https://www.linkedin.com/in/naufal-dawam-dzikrillah-920168170/",
+  website:"https://naufaldawam.github.io/new-portofolio-2026/",whatsapp:"https://wa.me/6281283566949",instagram:"https://www.instagram.com/naufalddz/",location:"South Jakarta - West Java"}
+};
+/* ============ Content panels (HTML) ============ */
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const tags=a=>a.map(t=>`<span class="tag">${esc(t)}</span>`).join('');
+const link=(u,t)=>u?`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${t}</a>`:`<span class="ph">${t}: not configured</span>`;
+const PANELS={
+ about:{t:"Home / About",h:()=>`<h3>${esc(CONFIG.name)}</h3><p><b>${esc(CONFIG.title)}</b></p><p>${esc(CONFIG.intro)}</p><p>${tags(CONFIG.interests)}</p><p>${esc(CONFIG.summary)}</p><h3>Education</h3><ul>${CONFIG.education.map(e=>`<li><b>${esc(e.major)}</b>, ${esc(e.school)} (${esc(e.period)})</li>`).join('')}</ul><p>${link(CONFIG.cv,'Download CV')}</p>`},
+ skills:{t:"Skills Garage",h:()=>`<div class="cards">${Object.entries(CONFIG.skills).map(([g,l])=>`<div class="card"><h3>${esc(g)}</h3>${tags(l)}</div>`).join('')}</div>`},
+ projects:{t:"Projects Zone",h:()=>`<div class="cards">${CONFIG.projects.map(p=>`<div class="card">${p.thumb?`<img src="${esc(p.thumb)}" alt="" width="100%">`:''}<h3>${esc(p.title)}</h3><p>${esc(p.desc)}</p>${p.status?`<p>${tags([p.status])}</p>`:''}${p.tech.length?`<p>${tags(p.tech)}</p>`:''}${p.role?`<p><b>Role:</b> ${esc(p.role)}</p>`:''}<p>${p.repo?link(p.repo,'Repository')+'<br>':''}${link(p.demo,'Visit')}</p></div>`).join('')}</div>`},
+ experience:{t:"Experience Station",h:()=>CONFIG.experience.map(e=>`<div class="card" style="margin-bottom:.7rem"><h3>${esc(e.role)} — ${esc(e.org)}</h3><small>${esc(e.period)}</small>${e.duties.length?`<ul>${e.duties.map(d=>`<li>${esc(d)}</li>`).join('')}</ul>`:''}${e.tech.length?`<p>${tags(e.tech)}</p>`:''}${e.wins.length?`<ul>${e.wins.map(d=>`<li>${esc(d)}</li>`).join('')}</ul>`:''}</div>`).join('')},
+ contact:{t:"Contact Terminal",h:()=>{const c=CONFIG.contact;return `<div class="cards"><div class="card">${link(c.email&&'mailto:'+c.email,'Email')}</div><div class="card">${link(c.github,'GitHub')}</div><div class="card">${link(c.linkedin,'LinkedIn')}</div><div class="card">${link(c.website,'Website')}</div><div class="card">${link(c.whatsapp,'WhatsApp')}</div><div class="card">${link(c.instagram,'Instagram')}</div></div><p>Location: ${esc(c.location)}</p>`}}
+};
+const $=id=>document.getElementById(id);
+$('sName').textContent=CONFIG.name.toUpperCase();$('sHead').textContent=CONFIG.headline;$('sSub').textContent=CONFIG.subtitle;$('brand').textContent=CONFIG.name;$('mName').textContent=CONFIG.name;
+const dlg=$('dlg');let modalOpen=false,menuOpen=false;
+function openPanel(id){toggleMenu(false,true);const p=PANELS[id];$('dT').textContent=p.t;$('dB').innerHTML=p.h();modalOpen=true;resetKeys();if(!dlg.open)dlg.showModal();$('dX').focus()}
+dlg.addEventListener('close',()=>{modalOpen=false});
+$('dX').onclick=()=>dlg.close();
+function toggleMenu(f,nf){if(f===menuOpen)return;menuOpen=f;$('menu').classList.toggle('open',f);$('scrim').style.display=f?'block':'none';$('burger').setAttribute('aria-expanded',String(f));$('menu').setAttribute('aria-hidden',String(!f));if(f){resetKeys();$('nav').firstChild.focus()}else if(!nf)$('burger').focus()}
+$('burger').onclick=()=>toggleMenu(!menuOpen);$('mX').onclick=()=>toggleMenu(false);$('scrim').onclick=()=>toggleMenu(false);
+for(const id in PANELS){const b=document.createElement('button');b.textContent=PANELS[id].t;b.onclick=()=>openPanel(id);$('nav').appendChild(b)}
+$('view').onclick=()=>{openPanel('about')};
+let started=false,world=null;
+function fail(m){$('errB').textContent=m;$('err').style.display='grid';setTimeout(()=>$('err').style.display='none',6000)}
 
-  <div id="controls">
-    <div class="control-row"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>DRIVE</span></div>
-    <div class="control-row"><kbd>SPACE</kbd><span>BRAKE</span></div>
-    <div class="control-row"><kbd>E</kbd><span>INTERACT</span></div>
-    <div class="control-row"><kbd>N</kbd><span>DAY / NIGHT</span></div>
-  </div>
+/* ============ Input ============ */
+const K={up:0,down:0,left:0,right:0,boost:0,brake:0,jump:0};let held={};
+function resetKeys(){for(const k in K)K[k]=0;held={}}
+const MAP={KeyW:'up',ArrowUp:'up',KeyS:'down',ArrowDown:'down',KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right',ShiftLeft:'boost',ShiftRight:'boost',ControlLeft:'brake',ControlRight:'brake',KeyB:'brake',Space:'jump'};
+const typing=e=>/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)||e.target.isContentEditable;
+addEventListener('keydown',e=>{if(typing(e))return;
+ if(e.code==='Escape'){if(dlg.open)dlg.close();else if(menuOpen)toggleMenu(false);return}
+ if(!started||modalOpen||menuOpen)return;
+ if(MAP[e.code]){K[MAP[e.code]]=1;e.preventDefault()}
+ else if(e.repeat)return;
+ else if(e.code==='Enter'&&world&&world.near){e.preventDefault();openPanel(world.near.id)}
+ else if(e.code==='KeyM')$('mm').style.display=$('mm').style.display==='none'?'':'none';
+ else if(e.code==='KeyL')toggleSound();else if(e.code==='KeyR')world&&world.respawn();
+ else if(e.code==='KeyH')honk();else if(e.code==='KeyC')world&&world.camMode++;});
+addEventListener('keyup',e=>{if(MAP[e.code])K[MAP[e.code]]=0});
+addEventListener('blur',resetKeys);
+document.querySelectorAll('#touch button').forEach(b=>{const k=b.dataset.k;const on=e=>{e.preventDefault();if(modalOpen||menuOpen)return;if(k==='act'){world&&world.near&&openPanel(world.near.id)}else K[k]=1};
+ b.addEventListener('pointerdown',on);['pointerup','pointercancel','pointerleave'].forEach(t=>b.addEventListener(t,()=>{if(k!=='act')K[k]=0}))});
+$('bC').onclick=()=>{world&&world.camMode++;toggleMenu(false)};
+$('bR').onclick=()=>{world&&world.respawn();toggleMenu(false)};
+/* simple WebAudio (honk only, no external audio files) */
+let actx=null,soundOn=false;
+function toggleSound(){soundOn=!soundOn;$('bS').textContent=soundOn?'Sound on':'Sound off'}
+function honk(){if(!soundOn)return;try{actx=actx||new AudioContext();const o=actx.createOscillator(),g=actx.createGain();o.type='square';o.frequency.value=330;g.gain.value=.06;o.connect(g).connect(actx.destination);o.start();o.stop(actx.currentTime+.25)}catch(_){}}
+$('bS').onclick=toggleSound;
 
-  <div id="zone-card">
-    <div class="zone-kicker">NEARBY</div>
-    <div id="zone-title">PROJECTS</div>
-    <div id="zone-action">Press E to explore</div>
-  </div>
+/* ============ 3D world ============ */
+async function build(){
+ const THREE=await import('three');
+ const canvas=$('c');let renderer;
+ try{renderer=new THREE.WebGLRenderer({canvas,antialias:matchMedia('(pointer:fine)').matches,powerPreference:'high-performance'})}catch(e){throw new Error('WebGL unavailable. Use the section buttons above to read the portfolio.')}
+ renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
+ renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+ const scene=new THREE.Scene();scene.background=new THREE.Color('#f9d9b0');scene.fog=new THREE.Fog('#f9d9b0',60,150);
+ const cam=new THREE.PerspectiveCamera(55,1,.5,220);
+ scene.add(new THREE.HemisphereLight('#fff3df','#c97a43',1.1));
+ const sun=new THREE.DirectionalLight('#fff0d8',2.2);sun.position.set(30,50,20);sun.shadow.mapSize.set(1024,1024);
+ Object.assign(sun.shadow.camera,{left:-35,right:35,top:35,bottom:-35,near:1,far:140});sun.shadow.bias=-0.0005;scene.add(sun,sun.target);
+ const M=(c,r=.8)=>new THREE.MeshStandardMaterial({color:c,roughness:r,flatShading:true});
+ const mat={road:M('#5a5450',.9),roadR:Object.assign(M('#5a5450',.9),{polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),walk:M('#FFF6E9'),curb:M('#c9b79b'),ground:M('#F5A15B',.95),cream:M('#FFF6E9'),orange:M('#F58B46',.45),yellow:M('#E4E96C'),dark:M('#272522'),blue:M('#6A8FA3',.3),rock:M('#d98a55'),trunk:M('#8a5a3a'),glass:M('#2b3a44',.15)};
+ const add=(g,m,x,y,z,p=scene)=>{const o=new THREE.Mesh(g,m);o.position.set(x,y,z);o.castShadow=o.receiveShadow=true;p.add(o);return o};
+ const R=75;
+ const gnd=add(new THREE.CircleGeometry(R+8,48),mat.ground,0,0,0);gnd.rotation.x=-Math.PI/2;gnd.castShadow=false;
+ const label=(txt,w,h,fs,bg,fg)=>{const c=document.createElement('canvas');c.width=1024;c.height=Math.round(1024*h/w);const x=c.getContext('2d');
+  if(bg){x.fillStyle=bg;x.beginPath();x.roundRect(8,8,c.width-16,c.height-16,40);x.fill()}
+  x.fillStyle=fg;x.font=`900 ${fs}px Impact,"Arial Black",sans-serif`;x.textAlign='center';x.textBaseline='middle';x.fillText(txt,c.width/2,c.height/2,c.width-80);
+  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t};
+ // name landmark (original canvas typography on a stepped cream plinth)
+ const sign=new THREE.Mesh(new THREE.PlaneGeometry(26,6),new THREE.MeshBasicMaterial({map:label(CONFIG.name.toUpperCase().replace(' ','  '),26,6,92,'#272522','#FFF6E9'),transparent:true}));
+ sign.position.set(0,6,19);sign.rotation.y=Math.PI;scene.add(sign);
+ add(new THREE.BoxGeometry(27,.8,2),mat.cream,0,.4,19);add(new THREE.BoxGeometry(.6,6,.6),mat.cream,-12,3,19.2);add(new THREE.BoxGeometry(.6,6,.6),mat.cream,12,3,19.2);
+ const ZONES=[{id:'about',x:-22,z:12,c:'#F58B46',n:'HOME / ABOUT'},{id:'skills',x:26,z:13,c:'#6A8FA3',n:'SKILLS GARAGE'},{id:'projects',x:30,z:-20,c:'#E4E96C',n:'PROJECTS'},
+  {id:'experience',x:-3,z:-34,c:'#6A8FA3',n:'EXPERIENCE'},{id:'contact',x:-31,z:-14,c:'#F58B46',n:'CONTACT'}];
+ const obst=[];// {x,z,r}
+ for(const z of ZONES){
+  const L=Math.hypot(z.x,z.z),ux=z.x/L,uz=z.z/L,rd=add(new THREE.PlaneGeometry(5,54),mat.roadR,ux*27,.07,uz*27);rd.rotation.order='YXZ';rd.rotation.set(-Math.PI/2,Math.atan2(-ux,-uz),0);rd.castShadow=false;
+  add(new THREE.CylinderGeometry(7,7.4,.5,32),mat.cream,z.x,.25,z.z);
+  const col=M(z.c,.5);add(new THREE.BoxGeometry(1.4,5,1.4),col,z.x-3.2,2.8,z.z);add(new THREE.BoxGeometry(1.4,5,1.4),col,z.x+3.2,2.8,z.z);add(new THREE.BoxGeometry(8.4,1.2,1.6),col,z.x,5.6,z.z);
+  obst.push({x:z.x-3.2,z:z.z,r:1},{x:z.x+3.2,z:z.z,r:1});
+  const s=new THREE.Sprite(new THREE.SpriteMaterial({map:label(z.n,8,1.6,130,'#FFF6E9','#272522'),fog:false}));s.scale.set(8,1.6,1);s.position.set(z.x,7.6,z.z);scene.add(s);
+  if(z.id==='skills'){add(new THREE.BoxGeometry(5,3,4),mat.cream,z.x,2,z.z-3);obst.push({x:z.x,z:z.z-3,r:3})}
+  if(z.id==='experience')for(let i=0;i<4;i++)add(new THREE.BoxGeometry(1.6,.6+i*.7,1.6),mat.cream,z.x-3+i*2,.5+(.6+i*.7)/2,z.z-3.5);
+  if(z.id==='contact')add(new THREE.CylinderGeometry(.5,.7,2.4,6),mat.dark,z.x,1.6,z.z-3);
+ }
+ // seeded props, instanced
+ let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+ const free=(x,z)=>Math.hypot(x,z)<46&&ZONES.every(q=>Math.abs(x*q.z-z*q.x)/Math.hypot(q.x,q.z)>4||x*q.x+z*q.z<0)&&ZONES.every(q=>Math.hypot(x-q.x,z-q.z)>10)&&Math.hypot(x,z)>7&&Math.hypot(x-0,z-19)>10;
+ const pts=(n,minR)=>{const a=[];while(a.length<n){const x=(rnd()-.5)*2*R,z=(rnd()-.5)*2*R;if(free(x,z)&&a.every(p=>Math.hypot(p.x-x,p.z-z)>minR))a.push({x,z})}return a};
+ const trees=pts(22,5),rocks=pts(8,3.5),d=new THREE.Object3D();
+ /* ---- residential layout: ring road, sidewalks, crosswalks, houses ---- */
+ const D2R=Math.PI/180,pol=(r,a)=>({x:r*Math.cos(a*D2R),z:r*Math.sin(a*D2R)});
+ const zAng=ZONES.map(q=>Math.atan2(q.z,q.x)/D2R),adiff=(a,b)=>Math.abs(((a-b+540)%360)-180);
+ const flat=(a,b,y,m)=>{const o=new THREE.Mesh(new THREE.RingGeometry(a,b,72),m);o.rotation.x=-Math.PI/2;o.position.y=y;o.receiveShadow=true;scene.add(o)};
+ const mk=M('#FFF6E9',1);mk.polygonOffset=true;mk.polygonOffsetFactor=-2;mk.polygonOffsetUnits=-2;
+ flat(50.5,57.5,.03,mat.road);flat(57.5,60.5,.05,mat.walk);flat(47.5,50.5,.05,mat.walk);flat(57.2,57.5,.06,mat.curb);flat(50.5,50.8,.06,mat.curb);flat(0,5.5,.09,mk);
+ const dm=new THREE.Object3D(),dm2=new THREE.Matrix4();dm.rotation.order='YXZ';
+ const CW=zAng.slice(0,4).map(a=>a+8),dsh=[];for(let i=0;i<36;i++){const a=i*10;if(CW.every(c=>adiff(a,c)>5))dsh.push(a)}
+ const dash=new THREE.InstancedMesh(new THREE.PlaneGeometry(.2,1.6),mk,dsh.length);
+ dsh.forEach((a,i)=>{const q=pol(54,a);dm.position.set(q.x,.09,q.z);dm.rotation.set(-Math.PI/2,Math.PI-a*D2R,0);dm.updateMatrix();dash.setMatrixAt(i,dm.matrix)});scene.add(dash);
+ /* standard zebra: 7 bars parallel to traffic, side by side across the full road width */
+ const zb=new THREE.InstancedMesh(new THREE.PlaneGeometry(.5,3.4),mk,CW.length*7);let zi=0;
+ for(const a of CW)for(let k=0;k<7;k++){const q=pol(51.25+k*.95,a);dm.position.set(q.x,.09,q.z);dm.rotation.set(-Math.PI/2,Math.PI-a*D2R,0);dm.updateMatrix();zb.setMatrixAt(zi++,dm.matrix)}scene.add(zb);
+ const HC=['#F58B46','#FFF6E9','#E4E96C','#6A8FA3','#f2b7a0','#d9c9a6'],RC=['#b5503a','#6a4a3a','#4d6a78','#8a3b2a'];
+ const hM=HC.map(c=>M(c,.8)),rM=RC.map(c=>M(c,.7)),bx=(w,h,l)=>new THREE.BoxGeometry(w,h,l);
+ const gB=bx(7,4.2,6),gRoof=new THREE.ConeGeometry(1,1,4).rotateY(Math.PI/4),gDoor=bx(1.1,2.5,.12),gWin=bx(1.3,1.2,.12),gPorch=bx(3.4,.25,2),gPR=bx(3.6,.25,2.2),gCF=bx(3.6,.2,4.5),gCR=bx(3.9,.22,4.8),gDrv=bx(3,.05,6.5),gLawn=bx(15,.04,9.2),gBush=new THREE.SphereGeometry(.6,6,5),gRail=bx(1,.12,.12),gPost=bx(.12,1,.12);
+ const lawn=M('#b9cf6a',1),bush=M('#8fb04a',.9),posts=new THREE.InstancedMesh(gPost,mat.cream,120);let pi=0;const lampA=[];let hi=0;
+ const post=(g,x,h,z)=>{dm.position.set(x,h/2,z);dm.rotation.set(0,0,0);dm.scale.set(1,h,1);dm.updateMatrix();dm2.multiplyMatrices(g.matrixWorld,dm.matrix);posts.setMatrixAt(pi++,dm2);dm.scale.set(1,1,1)};
+ for(let i=0;i<14;i++){const a=i*360/14+7;if(zAng.some(z=>adiff(a,z)<11))continue;
+  const g=new THREE.Group(),p=pol(67,a);g.position.set(p.x,0,p.z);g.rotation.y=Math.atan2(-Math.cos(a*D2R),-Math.sin(a*D2R));scene.add(g);g.updateMatrixWorld(true);
+  const hm=hM[hi%hM.length],rm=rM[(hi*3)%rM.length];hi++;lampA.push(a);
+  add(gLawn,lawn,0,.02,1,g).castShadow=false;
+  add(gB,hm,0,2.1,0,g);add(gRoof,rm,0,5.4,0,g).scale.set(5.3,2.4,4.6);
+  add(gDoor,mat.trunk,-1,1.25,3.07,g);add(gWin,mat.blue,-2.7,2.4,3.07,g);add(gWin,mat.blue,1.7,2.4,3.07,g);
+  add(gPorch,mat.walk,-1,.13,4,g);add(gPR,mat.cream,-1,2.8,4.1,g);post(g,-2.5,2.7,4.8);post(g,.5,2.7,4.8);
+  add(gCF,mat.curb,5.8,.1,2.25,g);add(gCR,mat.cream,5.8,2.7,2.25,g);post(g,7.5,2.6,4.3);post(g,4.1,2.6,4.3);
+  add(gDrv,mat.curb,5.8,.07,5.75,g).castShadow=false;
+  add(gRail,mat.cream,-1.75,.65,5.6,g).scale.x=11.5;for(let j=0;j<5;j++)post(g,-7.4+j*2.9,.8,5.6);
+  add(gBush,bush,-4.3,.5,4.3,g);add(gBush,bush,1.9,.5,4.4,g);
+  for(const[x,r]of[[-2.6,3.2],[.4,3.2],[3,1.8]]){const w=g.localToWorld(new THREE.Vector3(x,0,0));obst.push({x:w.x,z:w.z,r})}
+ }
+ posts.count=pi;posts.castShadow=true;scene.add(posts);
+ for(let i=0;i<28;i++){const a=i*360/28+3;if(zAng.some(z=>adiff(a,z)<6)||CW.some(z=>adiff(a,z)<6))continue;trees.push(pol(60.5,a))}
+ const lp=new THREE.InstancedMesh(new THREE.CylinderGeometry(.08,.1,4.2,5),mat.dark,lampA.length),lb=new THREE.InstancedMesh(new THREE.SphereGeometry(.28,6,5),new THREE.MeshBasicMaterial({color:'#fff2a0'}),lampA.length);
+ lampA.forEach((a,i)=>{const q=pol(59.9,a+4);obst.push({x:q.x,z:q.z,r:.25});dm.position.set(q.x,2.1,q.z);dm.rotation.set(0,0,0);dm.updateMatrix();lp.setMatrixAt(i,dm.matrix);dm.position.y=4.3;dm.updateMatrix();lb.setMatrixAt(i,dm.matrix)});scene.add(lp,lb);
+ const bn=new THREE.InstancedMesh(bx(1.6,.45,.5),mat.trunk,4),bi=new THREE.InstancedMesh(new THREE.CylinderGeometry(.25,.2,.7,6),mat.blue,4);
+ CW.forEach((a,i)=>{let q=pol(49,a+20);dm.position.set(q.x,.3,q.z);dm.rotation.set(0,Math.atan2(-Math.cos((a+20)*D2R),-Math.sin((a+20)*D2R)),0);dm.updateMatrix();bn.setMatrixAt(i,dm.matrix);{const ta=(a+20)*D2R,tx=-Math.sin(ta),tz=Math.cos(ta);for(const o of[-.5,.5])obst.push({x:q.x+tx*o,z:q.z+tz*o,r:.5})}q=pol(49,a+24);obst.push({x:q.x,z:q.z,r:.4});dm.position.set(q.x,.4,q.z);dm.rotation.set(0,0,0);dm.updateMatrix();bi.setMatrixAt(i,dm.matrix)});scene.add(bn,bi);
+ const tr=new THREE.InstancedMesh(new THREE.CylinderGeometry(.25,.35,1.6,5),mat.trunk,trees.length),cr=new THREE.InstancedMesh(new THREE.ConeGeometry(1.5,3.4,6),M('#C9D95A'),trees.length);
+ trees.forEach((p,i)=>{const s=.8+rnd()*.7;d.position.set(p.x,.8*s,p.z);d.scale.setScalar(s);d.rotation.set(0,0,0);d.updateMatrix();tr.setMatrixAt(i,d.matrix);d.position.y=2.9*s;d.updateMatrix();cr.setMatrixAt(i,d.matrix);obst.push({x:p.x,z:p.z,r:.7*s})});
+ const rk=new THREE.InstancedMesh(new THREE.DodecahedronGeometry(1,0),mat.rock,rocks.length);
+ rocks.forEach((p,i)=>{const s=.6+rnd()*1.1;d.position.set(p.x,s*.5,p.z);d.scale.set(s,s*.7,s);d.rotation.set(rnd(),rnd()*6,rnd());d.updateMatrix();rk.setMatrixAt(i,d.matrix);obst.push({x:p.x,z:p.z,r:s*.85})});
+ for(const m of[tr,cr,rk]){m.castShadow=m.receiveShadow=true;scene.add(m)}
+ // boundary wall ring
+ const wall=add(new THREE.TorusGeometry(R+4,.8,6,64),mat.cream,0,.6,0);wall.rotation.x=Math.PI/2;
+ // active zone ring
+ const ring=new THREE.Mesh(new THREE.RingGeometry(6.2,6.7,40),new THREE.MeshBasicMaterial({color:'#E4E96C',polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}));ring.rotation.x=-Math.PI/2;ring.position.y=.53;ring.visible=false;scene.add(ring);
 
-  <div id="info" aria-hidden="true">
-    <button id="closeInfo" aria-label="Close">×</button>
-    <div class="info-kicker" id="infoKicker">AREA</div>
-    <h2 id="infoTitle"></h2>
-    <p id="infoText"></p>
-    <div class="chips" id="infoChips"></div>
-  </div>
+ /* ---- procedural car (+z forward) ---- */
+ const car=new THREE.Group(),body=new THREE.Group();car.add(body);scene.add(car);
+ add(new THREE.BoxGeometry(1.7,.45,3.2),mat.dark,0,.55,0,body);
+ add(new THREE.BoxGeometry(1.9,.55,3.0),mat.orange,0,.95,0,body);
+ add(new THREE.BoxGeometry(1.7,.6,1.6),mat.cream,0,1.5,-.2,body);
+ add(new THREE.BoxGeometry(1.5,.4,.05),mat.glass,0,1.55,.62,body).rotation.x=.4;
+ add(new THREE.BoxGeometry(1.5,.4,.05),mat.glass,0,1.55,-1.02,body);
+ for(const s of[-1,1]){add(new THREE.BoxGeometry(.05,.4,1.2),mat.glass,s*.86,1.55,-.2,body);add(new THREE.BoxGeometry(.25,.18,.12),mat.cream,s*1.05,1.35,.45,body);
+  add(new THREE.BoxGeometry(.3,.18,.08),mat.yellow,s*.65,1.0,1.52,body);
+  for(const zz of[1.05,-1.05])add(new THREE.BoxGeometry(.7,.12,.7),mat.dark,s*.95,.85,zz,body)}
+ add(new THREE.BoxGeometry(2.0,.25,.3),mat.cream,0,.6,1.65,body);add(new THREE.BoxGeometry(2.0,.25,.3),mat.cream,0,.6,-1.65,body);
+ const tail=new THREE.MeshStandardMaterial({color:'#a01818',emissive:'#ff2010',emissiveIntensity:.3});
+ for(const s of[-1,1])add(new THREE.BoxGeometry(.4,.18,.06),tail,s*.7,1.0,-1.52,body);
+ add(new THREE.BoxGeometry(.1,.1,1.0),mat.blue,0,1.9,-.4,body).visible=true;
+ const wheels=[];const tireG=new THREE.CylinderGeometry(.5,.5,.45,14),tread=new THREE.BoxGeometry(.5,.08,.14);
+ for(const[x,z,f]of[[-1.05,1.05,1],[1.05,1.05,1],[-1.05,-1.05,0],[1.05,-1.05,0]]){
+  const piv=new THREE.Group(),roll=new THREE.Group();piv.position.set(x,.5,z);piv.add(roll);car.add(piv);
+  const t=add(tireG,mat.dark,0,0,0,roll);t.rotation.z=Math.PI/2;
+  for(let i=0;i<8;i++){const a=i/8*Math.PI*2,tt=add(tread,mat.dark,0,Math.sin(a)*.5,Math.cos(a)*.5,roll);tt.rotation.x=a;tt.scale.set(1.05,1,1);tt.castShadow=false}
+  const hub=add(new THREE.CylinderGeometry(.25,.25,.5,8),mat.cream,0,0,0,roll);hub.rotation.z=Math.PI/2;
+  wheels.push({piv,roll,front:f})}
 
-  <div id="mobileControls" aria-hidden="true">
-    <div id="mobileJoystick" aria-label="Steer">
-      <div id="mobileJoystickRing"></div>
-      <div id="mobileJoystickKnob">●</div>
-    </div>
+ /* ---- pedestrians: procedural 3D humans, shared geometry/materials, waypoint patrol ---- */
+ const SK=['#f1c9a5','#c68e63','#8d5a3b'].map(c=>M(c,.9)),SH=['#e4572e','#4da167','#3e7cb1','#f2c14e','#9b5de5','#ffffff'].map(c=>M(c,.9)),PN=['#2d3047','#5c5470','#3b3b3b','#6a8fa3'].map(c=>M(c,.9)),HR=['#272522','#5b3a24','#c9a25a','#8a8a8a'].map(c=>M(c,.9));
+ const gT=new THREE.BoxGeometry(.5,.7,.3),gH=new THREE.SphereGeometry(.2,8,6),gL=new THREE.BoxGeometry(.2,.75,.22).translate(0,-.375,0),gA=new THREE.BoxGeometry(.14,.6,.16).translate(0,-.3,0),gHr=new THREE.SphereGeometry(.21,8,4,0,Math.PI*2,0,Math.PI*.55);
+ const pb=(g,m,x,y,z,p,cs)=>{const o=new THREE.Mesh(g,m);o.position.set(x,y,z);o.castShadow=!!cs;p.add(o);return o};
+ const npcs=[];
+ function mkNpc(i,path){const g=new THREE.Group();
+  pb(gT,SH[i%6],0,1.1,0,g,1);pb(gH,SK[(i*5)%3],0,1.73,0,g,1);pb(gHr,HR[(i*7)%4],0,1.75,0,g);
+  const l=[-1,1].map(s=>{const p=new THREE.Group();p.position.set(s*.13,.75,0);pb(gL,PN[(i*3)%4],0,0,0,p);g.add(p);return p});
+  const a=[-1,1].map(s=>{const p=new THREE.Group();p.position.set(s*.34,1.43,0);pb(gA,SH[i%6],0,0,0,p);g.add(p);return p});
+  g.scale.setScalar((.92+((i*37)%17)/100)*1.1);g.position.set(path[0].x,.06,path[0].z);scene.add(g);
+  npcs.push({g,l,a,path,i0:0,dir:1,ph:i*1.7,sp:0,v:1.2+(i%4)*.12,pause:Math.random()*2,i,cool:0})}
+ const arc=(r,a0,n,st)=>Array.from({length:n},(_,k)=>pol(r,a0+k*st));
+ const PR=[];for(let k=0;k<8;k++)PR.push(arc(58.6,k*45+10,4,12));
+ for(const a of CW)PR.push([pol(58.6,a),pol(49,a),pol(49,a+14)]);
+ PR.forEach((p,i)=>mkNpc(i,p));
+ const slots=[0,1,2].map(i=>({el:$('hit'+i),n:null,t:0})),pv=new THREE.Vector3();
+ function showHit(n){const f=slots.find(q=>!q.n)||slots.reduce((a,b)=>a.t<b.t?a:b);f.n=n;f.t=2.6;f.el.style.opacity=1}
+ function updHits(dt){for(const q of slots){if(!q.n)continue;q.t-=dt;if(q.t<=0){q.n=null;q.el.style.opacity=0;continue}
+  pv.set(q.n.g.position.x,2.7,q.n.g.position.z).project(cam);q.el.style.visibility=pv.z<1?'visible':'hidden';
+  q.el.style.transform=`translate(${(pv.x*.5+.5)*innerWidth}px,${(-pv.y*.5+.5)*innerHeight}px) translate(-50%,-100%)`}}
+ function npcStep(dt,t){for(const n of npcs){const g=n.g,p=g.position;let want=0;
+  const ex=p.x-S.x,ez=p.z-S.z;n.cool-=dt;
+  if(Math.abs(ex)<3&&Math.abs(ez)<3){const lz=ex*fwd.x+ez*fwd.z,lx=ex*fwd.z-ez*fwd.x;
+   if(Math.abs(lz)<2.1&&Math.abs(lx)<1.1){const dl=Math.hypot(ex,ez)||1;p.x+=ex/dl*dt*3;p.z+=ez/dl*dt*3;
+    if(n.cool<=0&&Math.abs(S.v)>.3){n.cool=4;n.pause=2.6;S.v*=.85;showHit(n)}}}
+  if(n.pause>0)n.pause-=dt;else{const T=n.path[n.i0],dx=T.x-p.x,dz=T.z-p.z,d=Math.hypot(dx,dz);
+   if(d<.25){let j=n.i0+n.dir;if(j<0||j>=n.path.length){n.dir=-n.dir;j=n.i0+n.dir;n.pause=1.5+Math.random()*3}else if(Math.random()<.15)n.pause=1+Math.random()*2.5;n.i0=j}
+   else if(Math.hypot(S.x-p.x,S.z-p.z)>3.2||Math.abs(S.v)<1){const st=Math.min(d,n.v*dt);p.x+=dx/d*st;p.z+=dz/d*st;want=1;
+    let dy=Math.atan2(dx,dz)-g.rotation.y;dy=Math.atan2(Math.sin(dy),Math.cos(dy));g.rotation.y+=dy*Math.min(1,dt*8)}}
+  n.sp+=(want-n.sp)*Math.min(1,dt*6);n.ph+=dt*6*n.sp;const sw=Math.sin(n.ph)*.7*n.sp,id=Math.sin(t*1.5+n.i)*.03;
+  n.l[0].rotation.x=sw;n.l[1].rotation.x=-sw;n.a[0].rotation.x=-sw*.8+id;n.a[1].rotation.x=sw*.8-id;p.y=.06+Math.abs(Math.cos(n.ph))*.04*n.sp}}
+ /* ---- state ---- */
+ const S={x:0,z:0,y:0,vy:0,h:0,v:0,steer:0,boost:1,pitch:0,roll:0,spawn:1};
+ const world={near:null,camMode:0,respawn(){Object.assign(S,{x:0,z:0,y:0,vy:0,h:0,v:0,spawn:0})}};
+ let camYaw=0,zoom=1,drag=false,lx=0,ly=0,pOff=0,cD=14,cPh=.95,lastCM=-1;const cp=new THREE.Vector3(),tgt=new THREE.Vector3();cam.position.set(0,12,-9);
+ canvas.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;ly=e.clientY;canvas.setPointerCapture(e.pointerId)});
+ canvas.addEventListener('pointermove',e=>{if(!drag)return;camYaw-=(e.clientX-lx)*.006;pOff=Math.min(.3,Math.max(-.3,pOff+(e.clientY-ly)*.004));lx=e.clientX;ly=e.clientY});
+ canvas.addEventListener('pointerup',()=>drag=false);canvas.addEventListener('pointercancel',()=>drag=false);
+ canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.min(1.6,Math.max(.6,zoom+e.deltaY*.001))},{passive:false});
+ let pinch=0;canvas.addEventListener('touchmove',e=>{if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);if(pinch)zoom=Math.min(1.6,Math.max(.6,zoom-(d-pinch)*.004));pinch=d}},{passive:true});
+ canvas.addEventListener('touchend',()=>pinch=0);
 
-    <div id="mobilePedals">
-      <button id="mobileGas" type="button" aria-label="Accelerate">GAS</button>
-      <button id="mobileBrake" type="button" aria-label="Brake">BRAKE</button>
-    </div>
+ /* ---- quality ---- */
+ const Q={LOW:{pr:.9,sh:false},MID:{pr:1.1,sh:true,ms:1024},HIGH:{pr:Math.min(devicePixelRatio,1.5),sh:true,ms:2048}};
+ let mode='AUTO',lvl=1,good=0,bad=0;
+ function applyQ(name){const q=Q[name];renderer.setPixelRatio(Math.min(q.pr,devicePixelRatio));sun.castShadow=q.sh;
+  if(q.sh&&sun.shadow.mapSize.x!==q.ms){sun.shadow.mapSize.set(q.ms,q.ms);if(sun.shadow.map){sun.shadow.map.dispose();sun.shadow.map=null}}resize()}
+ const names=['LOW','MID','HIGH'];
+ $('bQ').onclick=()=>{mode={AUTO:'LOW',LOW:'HIGH',HIGH:'AUTO'}[mode];$('bQ').textContent='Quality: '+mode;lvl=mode==='AUTO'?1:names.indexOf(mode==='LOW'?'LOW':'HIGH');applyQ(names[lvl]);good=bad=0};
+ function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
+ addEventListener('resize',resize);
+ applyQ('MID');
 
-    <button id="mobileInteract" type="button" aria-label="Interact">E</button>
-  </div>
-
-  <div id="mobileHint" aria-hidden="true">LANDSCAPE MODE • TOUCH TO DRIVE</div>
-
-  <script type="module" src="./main.js"></script>
-</body>
-</html>
+ /* ---- loop ---- */
+ const fwd={x:0,z:0},mm=$('mm').getContext('2d');let last=performance.now(),acc=0,frames=0,fpsT=last,fps=60,mmT=0,tt=0;
+ document.addEventListener('visibilitychange',()=>{last=performance.now()});
+ const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+ function step(dt){
+  const on=started&&!modalOpen&&!menuOpen;
+  let thr=on?(K.up-K.down):0,st=on?(K.left-K.right):0,br=on&&K.brake,bo=on&&K.boost&&S.boost>0&&thr>0;
+  if(bo)S.boost=Math.max(0,S.boost-dt*.45);else S.boost=Math.min(1,S.boost+dt*.2);
+  const maxV=bo?20:12;
+  if(thr>0&&S.v>=-.1)S.v+=thr*(bo?26:14)*dt;else if(thr<0)S.v+=(S.v>0?-24:-9)*dt; else S.v-=Math.sign(S.v)*Math.min(Math.abs(S.v),4*dt);
+  if(thr>0&&S.v<-.1)S.v+=24*dt;
+  if(br)S.v-=Math.sign(S.v)*Math.min(Math.abs(S.v),30*dt);
+  S.v=Math.max(-6,Math.min(maxV,S.v));
+  S.steer+=(st-S.steer)*Math.min(1,dt*10);
+  S.h+=S.steer*1.9*Math.max(-1,Math.min(1,S.v/5))*dt;
+  if(on&&K.jump&&S.y<=.001){S.vy=7}
+  S.vy-=22*dt;S.y+=S.vy*dt;if(S.y<0){S.y=0;S.vy=0}
+  fwd.x=Math.sin(S.h);fwd.z=Math.cos(S.h);
+  S.x+=fwd.x*S.v*dt;S.z+=fwd.z*S.v*dt;
+  for(const o of obst){const dx=S.x-o.x;if(Math.abs(dx)>o.r+1.6)continue;const dz=S.z-o.z,d=Math.hypot(dx,dz),m=o.r+1.2;if(d<m&&d>.001){S.x+=dx/d*(m-d);S.z+=dz/d*(m-d);S.v*=.6}}
+  const rr=Math.hypot(S.x,S.z);if(rr>R){S.x*=R/rr;S.z*=R/rr;S.v*=.8}
+  S.pitch+=((-(thr)*.05)-S.pitch)*Math.min(1,dt*6);S.roll+=((-S.steer*Math.min(1,Math.abs(S.v)/10)*.08)-S.roll)*Math.min(1,dt*6);
+  tail.emissiveIntensity=br||thr<0&&S.v>0.5?2.2:.3;
+ }
+ function frame(now){requestAnimationFrame(frame);
+  let dt=Math.min(.05,(now-last)/1000);last=now;
+  acc+=dt;while(acc>=1/60){step(1/60);acc-=1/60}
+  tt+=dt;if(S.spawn<1)S.spawn=Math.min(1,S.spawn+dt*3);
+  car.position.set(S.x,S.y,S.z);car.rotation.y=S.h;car.scale.setScalar(.4+.6*S.spawn);
+  body.rotation.set(S.pitch+Math.sin(tt*30)*Math.min(.006,Math.abs(S.v)*.0007),0,S.roll);
+  for(const w of wheels){w.roll.rotation.x+=S.v*dt/.5;if(w.front)w.piv.rotation.y=S.steer*.5}
+  npcStep(dt,tt);
+  // camera
+  camYaw*=drag?1:Math.max(0,1-dt*1.5);
+  camYaw=Math.max(-1.6,Math.min(1.6,camYaw));const drone=world.camMode%2===0,kd=Math.min(1,dt*3);if(world.camMode!==lastCM){lastCM=world.camMode;$('bC').textContent='Camera: '+(drone?'Drone':'Chase')}
+  cD+=((drone?14:9)*zoom*(innerWidth<700?.8:1)-cD)*kd;cPh+=((drone?.95:.38)+pOff-cPh)*kd;
+  const dist=cD,a=S.h+camYaw,ph=cPh,sp=Math.max(0,S.v)*.05;
+  tgt.set(S.x-Math.sin(a)*Math.cos(ph)*(dist+sp),Math.max(1.2,S.y+Math.sin(ph)*dist+.8),S.z-Math.cos(a)*Math.cos(ph)*(dist+sp));
+  cam.position.lerp(tgt,1-Math.exp(-dt*(reduce?30:6)));const cr=Math.hypot(cam.position.x,cam.position.z);if(cr>61){cam.position.x*=61/cr;cam.position.z*=61/cr}
+  cp.set(S.x+(drone?fwd.x*3:0),S.y+1,S.z+(drone?fwd.z*3:0));cam.lookAt(cp);
+  cam.fov+=(((drone?62:55)+(S.v>12?8:0))-cam.fov)*Math.min(1,dt*3);cam.updateProjectionMatrix();
+  sun.position.set(S.x+30,50,S.z+20);sun.target.position.set(S.x,0,S.z);
+  // interaction
+  let near=null,nd=7;for(const z of ZONES){const d=Math.hypot(S.x-z.x,S.z-z.z);if(d<nd){nd=d;near=z}}
+  if(near!==world.near){world.near=near;const p=$('prompt');p.style.display=near&&started&&!modalOpen?'block':'none';if(near){p.textContent='PRESS ENTER TO EXPLORE · '+near.n;ring.position.set(near.x,.53,near.z)}ring.visible=!!near}
+  if(near)$('prompt').style.display=started&&!modalOpen?'block':'none';
+  if(started){$('boost').firstChild.style.width=S.boost*100+'%'}
+  if(started&&now-mmT>100&&$('mm').style.display!=='none'){mmT=now;mm.clearRect(0,0,140,140);const sc=64/R;
+   for(const z of ZONES){mm.fillStyle=z.c;mm.beginPath();mm.arc(70+z.x*sc,70+z.z*sc,5,0,7);mm.fill()}
+   mm.save();mm.translate(70+S.x*sc,70+S.z*sc);mm.rotate(-S.h);mm.fillStyle='#272522';mm.beginPath();mm.moveTo(0,5);mm.lineTo(-4,-4);mm.lineTo(4,-4);mm.fill();mm.restore()}
+  renderer.render(scene,cam);updHits(dt);
+  // fps + adaptive quality
+  frames++;if(now-fpsT>=1000){fps=frames*1000/(now-fpsT);frames=0;fpsT=now;$('dbg').textContent=Math.round(fps)+' FPS · '+mode+(mode==='AUTO'?' ('+names[lvl]+')':'');
+   if(mode==='AUTO'&&started&&!document.hidden){if(fps<38){bad++;good=0}else if(fps>57){good++;bad=0}else{good=bad=0}
+    if(bad>=3&&lvl>0){lvl--;applyQ(names[lvl]);bad=0}else if(good>=12&&lvl<2){lvl++;applyQ(names[lvl]);good=0}}}
+ }
+ resize();$('fb').style.display='none';requestAnimationFrame(t=>{last=t;frame(t)});
+ return world;
+}
+/* ============ Boot ============ */
+build().then(w=>{world=w}).catch(e=>{console.error(e);$('fb').style.display='none';$('c').style.display='none';
+ $('start').style.background='linear-gradient(135deg,#F5A15B,#F58B46)';fail('3D scene could not start: '+e.message+' Portfolio sections remain available via the buttons.')});
+function begin(){started=true;$('start').style.display='none';$('hud').style.display='flex';$('side').style.display='flex';$('boost').style.display='block';
+  if(matchMedia('(pointer:coarse)').matches)$('touch').style.display='flex'}
+$('go').onclick=()=>{if(!world){fail('The 3D world is still loading or failed. Use VIEW PORTFOLIO.');return}begin()};
+$('view').addEventListener('click',()=>{$('hud').style.display='flex'});
+dlg.addEventListener('close',()=>{if(!started&&world===null)return;});
+</script></body></html>
